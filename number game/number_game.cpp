@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "number_game_utils.h"
 
 int main()
@@ -16,6 +14,7 @@ int main()
         std::cout << "Good Bye\n";
         return 0;
       case 1:
+        clear_screen();
         play_game();
         break;
     }

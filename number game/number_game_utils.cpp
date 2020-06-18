@@ -1,8 +1,9 @@
-#include <iostream>
-#include <vector>
-#include <fstream>
-
 #include "number_game_utils.h"
+
+void clear_screen()
+{
+  std::cout << "\x1B[2J\x1B[H";
+}
 
 void print_vector(std::vector<int> vector, int score)
 {
@@ -40,27 +41,43 @@ void play_game()
   std::vector<int> guesses;
   int score;
 
+  srand((int) time(0));
   int random = rand() % 1001;
-  std::cout << "Guess a Number (1 to 1000): ";
+  int lowest = 1;
+  int highest = 1000;
   while(true)
   {
     int guess;
     score = 100;
     while(score > 0)
     {
+      std::cout << "Guess a Number ( " << lowest << "to " << highest << "): ";
       std::cin >> guess;
+      if(!std::cin)
+      {
+        std::cin.clear();
+        std::cin.ignore(INT_MAX, '\n');
+        std::cout << "Input must be an integer.\n"; 
+        std::cout << "Guess a Number ( " << lowest << "to " << highest << "): ";
+        std::cin >> guess;
+      }
       guesses.push_back(guess);
-      if(guess == random)
+      if(guess < lowest || guess > highest)
+      {
+        std::cout << "Number out of range.\nTry again." << std::endl;
+      } else if(guess == random)
       {
         std::cout << "You win!\n" << "Your score: " << score << std::endl;
         break;
       } else if(guess < random)
       {
         score -= 1;
+        lowest = guess + 1;
         std::cout << "Too low\n" << "Your score: " << score << std::endl;
       } else
       {
         score -= 1;
+        highest = guess - 1;
         std::cout << "Too high\n" << "Your score: " << score << std::endl;
       }
     }
