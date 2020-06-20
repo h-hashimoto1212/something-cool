@@ -2,21 +2,8 @@
 
 int main()
 {
-  int choice;
-  do
-  {
-    std::cout << "0: Quit" << std::endl << "1: Play" << std::endl;
-    std::cin >> choice;
-
-    switch(choice)
-    {
-      case 0:
-        std::cout << "Good Bye\n";
-        return 0;
-      case 1:
-        clear_screen();
-        play_game();
-        break;
-    }
-  } while (choice != 0);
+  clear_screen();
+  std::cout << "The Number Game\n";
+  menu();
+  return 0;
 }

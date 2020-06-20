@@ -33,7 +33,27 @@ void save_score(std::vector<int> guesses, int &score)
     score =  best_score;
     std::cout << "Best score: " << score << std::endl;
   }
+}
 
+void menu()
+{
+  int choice;
+  do
+  {
+    std::cout << "0: Quit" << std::endl << "1: Play" << std::endl;
+    std::cin >> choice;
+
+    switch(choice)
+    {
+      case 0:
+        std::cout << "Good Bye\n";
+        std::exit(0);
+      case 1:
+        clear_screen();
+        play_game();
+        break;
+    }
+  } while (choice != 0);
 }
 
 void play_game()
@@ -42,43 +62,43 @@ void play_game()
   int score;
 
   srand((int) time(0));
-  int random = rand() % 1001;
   int lowest = 1;
   int highest = 1000;
+  int random = rand() % highest + 1;
   while(true)
   {
     int guess;
     score = 100;
     while(score > 0)
     {
-      std::cout << "Guess a Number ( " << lowest << "to " << highest << "): ";
+      std::cout << "Your score: " << score << std::endl;
+      std::cout << "Guess a Number ( " << lowest << "to " << highest << "):\n";
       std::cin >> guess;
-      if(!std::cin)
+      if(guess < lowest || guess > highest || !std::cin)
       {
         std::cin.clear();
         std::cin.ignore(INT_MAX, '\n');
-        std::cout << "Input must be an integer.\n"; 
-        std::cout << "Guess a Number ( " << lowest << "to " << highest << "): ";
-        std::cin >> guess;
-      }
-      guesses.push_back(guess);
-      if(guess < lowest || guess > highest)
-      {
-        std::cout << "Number out of range.\nTry again." << std::endl;
+        std::cout << "Input must be an integer wthin range.\n" << "Try again" << std::endl;
       } else if(guess == random)
       {
-        std::cout << "You win!\n" << "Your score: " << score << std::endl;
+        guesses.push_back(guess);
+        clear_screen();
+        std::cout << guess << "\nYou win!\n" << "Your score: " << score << std::endl;
         break;
       } else if(guess < random)
       {
+        guesses.push_back(guess);
         score -= 1;
         lowest = guess + 1;
-        std::cout << "Too low\n" << "Your score: " << score << std::endl;
+        clear_screen();
+        std::cout << guess << " is too low" << std::endl;
       } else
       {
+        guesses.push_back(guess);
         score -= 1;
         highest = guess - 1;
-        std::cout << "Too high\n" << "Your score: " << score << std::endl;
+        clear_screen();
+        std::cout << guess << " is too high" << std::endl;
       }
     }
     if(score == 0){
