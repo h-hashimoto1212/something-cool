@@ -35,12 +35,28 @@ void save_score(std::vector<int> guesses, int &score)
   }
 }
 
+void wait_for_enter()
+{
+  std::cin.clear();
+  std::cout << "Press ENTER to continue" << std::endl;
+  std::cin.get();
+  std::cin.clear();
+}
+
+int guess_john(int lowest, int highest)
+{
+  int guess = (lowest + highest) / 2;
+  std::cout << "John's Turn.\n" << "John's guess ( " << lowest << "to " << highest << "):" << std::endl;
+  std::cout << guess << std::endl;
+  return guess;
+}
+
 void menu()
 {
   int choice;
   do
   {
-    std::cout << "0: Quit" << std::endl << "1: Play" << std::endl;
+    std::cout << "0: Quit\n" << "1: Play Solo\n" << "2: Play with John" << std::endl;
     std::cin >> choice;
 
     switch(choice)
@@ -52,8 +68,69 @@ void menu()
         clear_screen();
         play_game();
         break;
+      case 2:
+        clear_screen();
+        play_with_john(1);
+        break;
     }
   } while (choice != 0);
+}
+
+void play_with_john(int player)
+{
+  srand((int) time(0));
+  int lowest = 1;
+  int highest = 1000;
+  int random = rand() % highest + 1;
+  int guess;
+
+  while(true)
+  {
+    if (player == 1)
+    {
+      std::cout << "Your Turn.\n" << "Guess a Number ( " << lowest << "to " << highest << "):" << std::endl;
+      std::cin >> guess;
+      player = 2;
+    } else
+    {
+      guess = guess_john(lowest, highest);
+      player = 1;
+    }
+
+    if(guess < lowest || guess > highest || !std::cin)
+    {
+      std::cin.clear();
+      std::cin.ignore(INT_MAX, '\n');
+      std::cout << "Input must be an integer wthin range.\n" << "Try again" << std::endl;
+    } else if(guess == random && player == 2)
+    {
+      wait_for_enter();
+      clear_screen();
+      std::cout << guess << "\nYou win!" << std::endl;
+      break;
+    } else if(guess == random && player == 1)
+    {
+      wait_for_enter();
+      clear_screen();
+      std::cout << guess << "\nJohn wins!" << std::endl;
+      break;
+    } else if(guess < random)
+    {
+      lowest = guess + 1;
+      wait_for_enter();
+      clear_screen();
+      std::cout << guess << " is too low" << std::endl;
+    } else
+    {
+      highest = guess - 1;
+      wait_for_enter();
+      clear_screen();
+      std::cout << guess << " is too high" << std::endl;
+    }
+    
+  }
+
+
 }
 
 void play_game()
